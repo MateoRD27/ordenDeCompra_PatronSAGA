@@ -1,0 +1,17 @@
+com\ecommerce\order_service\messaging\event\PaymentCompletedEvent.class
+com\ecommerce\order_service\entity\Order$OrderBuilder.class
+com\ecommerce\order_service\messaging\event\OrderCancelledEvent.class
+com\ecommerce\order_service\repository\OrderRepository.class
+com\ecommerce\order_service\OrderServiceApplication.class
+com\ecommerce\order_service\entity\Order.class
+com\ecommerce\order_service\config\RabbitMQConfig.class
+com\ecommerce\order_service\entity\enums\OrderStatus.class
+com\ecommerce\order_service\messaging\command\ReserveInventoryCommand.class
+com\ecommerce\order_service\messaging\command\ProcessPaymentCommand.class
+com\ecommerce\order_service\messaging\command\ReleaseInventoryCommand.class
+com\ecommerce\order_service\messaging\event\InventoryRejectedEvent.class
+com\ecommerce\order_service\messaging\event\OrderCompletedEvent.class
+com\ecommerce\order_service\messaging\event\PaymentFailedEvent.class
+com\ecommerce\order_service\SagaOrchestrator.class
+com\mateo\orderservice\OrderServiceApplication.class
+com\ecommerce\order_service\messaging\event\InventoryReservedEvent.class
