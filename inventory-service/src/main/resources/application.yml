@@ -2,22 +2,24 @@ spring:
   application:
     name: inventory-service
 
-  rabbitmq:
-    host: localhost
-    port: 5672
-    username: admin
-    password: admin
-
   datasource:
     url: jdbc:h2:mem:inventorydb
     driver-class-name: org.h2.Driver
     username: sa
     password:
 
+  h2:
+    console:
+      enabled: true
+      path: /h2-console
+
   jpa:
     hibernate:
-      ddl-auto: update
+      ddl-auto: create-drop
     show-sql: true
+    properties:
+      hibernate:
+        format_sql: true
 
   cloud:
     function:
@@ -35,10 +37,15 @@ spring:
 
         # OUTPUTS - Eventos que enviamos
         inventoryReservedEvent-out-0:
-          destination: inventory-events
+          destination: inventory-reserved-event
 
         inventoryRejectedEvent-out-0:
-          destination: inventory-events
+          destination: inventory-rejected-event
 
 server:
   port: 8082
+
+logging:
+  level:
+    com.mateo.inventoryservice: DEBUG
+    org.springframework.cloud.stream: DEBUG

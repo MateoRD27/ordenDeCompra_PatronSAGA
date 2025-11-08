@@ -17,7 +17,7 @@ import java.util.UUID;
 @Table(name = "inventory_items")
 public class InventoryItem {
     @Id
-    @GeneratedValue(strategy = GenerationType.IDENTITY)
+    @GeneratedValue(strategy = GenerationType.AUTO)
     private UUID id;
     private String productId;
     private int availableQuantity;
