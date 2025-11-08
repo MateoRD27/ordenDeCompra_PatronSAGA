@@ -1,0 +1,63 @@
+spring:
+  application:
+    name: payment-service
+
+  rabbitmq:
+    host: localhost
+    port: 5672
+    username: admin
+    password: admin
+
+  datasource:
+    url: jdbc:h2:mem:paymentdb
+    driver-class-name: org.h2.Driver
+    username: sa
+    password:
+
+  h2:
+    console:
+      enabled: true
+      path: /h2-console
+
+  jpa:
+    hibernate:
+      ddl-auto: update
+    show-sql: true
+    properties:
+      hibernate:
+        format_sql: true
+
+  cloud:
+    function:
+      definition: processPaymentConsumer;paymentCompleted;paymentFailed
+    stream:
+      bindings:
+        # INPUT - Comando que recibimos
+        processPaymentConsumer-in-0:
+          destination: payment.commands
+          group: payment-service-group
+
+        # OUTPUTS - Eventos que enviamos
+        paymentCompleted-out-0:
+          destination: payment.events
+
+        paymentFailed-out-0:
+          destination: payment.events
+
+      rabbit:
+        bindings:
+          paymentCompleted-out-0:
+            producer:
+              routing-key-expression: '''payment.completed'''
+
+          paymentFailed-out-0:
+            producer:
+              routing-key-expression: '''payment.failed'''
+
+server:
+  port: 8083
+
+logging:
+  level:
+    com.ecommerce.payment_service: DEBUG
+    org.springframework.amqp: DEBUG
