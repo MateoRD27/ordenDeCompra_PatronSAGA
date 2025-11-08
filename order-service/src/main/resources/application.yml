@@ -3,10 +3,10 @@ spring:
     name: order-service
 
   rabbitmq:
-    host: localhost
-    port: 5672
-    username: admin
-    password: admin
+    host: ${SPRING_RABBITMQ_HOST:localhost}
+    port: ${SPRING_RABBITMQ_PORT:5672}
+    username: ${SPRING_RABBITMQ_USERNAME:admin}
+    password: ${SPRING_RABBITMQ_PASSWORD:admin}
 
   datasource:
     url: jdbc:h2:mem:orderdb
@@ -16,7 +16,7 @@ spring:
 
   jpa:
     hibernate:
-      ddl-auto: update
+      ddl-auto: create-drop
     show-sql: true
 
   cloud:
@@ -24,24 +24,17 @@ spring:
       definition: reserveInventory;releaseInventory;processPayment;orderCompleted;inventoryEvents;paymentEvents
     stream:
       bindings:
-        # OUTPUTS - Comandos que enviamos
         reserveInventory-out-0:
           destination: reserve-inventory-command
-
         releaseInventory-out-0:
           destination: release-inventory-command
-
         processPayment-out-0:
           destination: process-payment-command
-
         orderCompleted-out-0:
           destination: order-completed-event
-
-        # INPUTS - Eventos que recibimos
         inventoryEvents-in-0:
           destination: inventory-events
           group: order-service-group
-
         paymentEvents-in-0:
           destination: payment-events
           group: order-service-group
@@ -52,4 +45,3 @@ server:
 logging:
   level:
     com.ecommerce.order: DEBUG
-    org.springframework.cloud.stream: DEBUG

@@ -3,10 +3,10 @@ spring:
     name: payment-service
 
   rabbitmq:
-    host: localhost
-    port: 5672
-    username: admin
-    password: admin
+    host: ${SPRING_RABBITMQ_HOST:localhost}
+    port: ${SPRING_RABBITMQ_PORT:5672}
+    username: ${SPRING_RABBITMQ_USERNAME:admin}
+    password: ${SPRING_RABBITMQ_PASSWORD:admin}
 
   datasource:
     url: jdbc:h2:mem:paymentdb
@@ -14,9 +14,14 @@ spring:
     username: sa
     password:
 
+  h2:
+    console:
+      enabled: true
+      path: /h2-console
+
   jpa:
     hibernate:
-      ddl-auto: update
+      ddl-auto: create-drop
     show-sql: true
 
   cloud:
@@ -24,15 +29,11 @@ spring:
       definition: processPaymentConsumer;paymentCompleted;paymentFailed
     stream:
       bindings:
-        # INPUT - Comando que recibimos
         processPaymentConsumer-in-0:
           destination: process-payment-command
           group: payment-service-group
-
-        # OUTPUTS - Eventos que enviamos
         paymentCompleted-out-0:
           destination: payment-events
-
         paymentFailed-out-0:
           destination: payment-events
 
