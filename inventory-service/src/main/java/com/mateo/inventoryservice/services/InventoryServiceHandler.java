@@ -32,16 +32,14 @@ public class InventoryServiceHandler {
                     var totalAmount = item.getPrice().multiply(java.math.BigDecimal.valueOf(command.quantity()));
                     streamBridge.send("inventoryReservedEvent-out-0",
                             new InventoryReservedEvent(command.orderId(), command.productId(), command.quantity(), totalAmount));
-                    log.info("Inventario reservado para orden {}", command.orderId());
                 } else {
                     streamBridge.send("inventoryRejectedEvent-out-0",
-                            new InventoryRejectedEvent(command.orderId(), command.productId(), command.quantity()));
-                    log.warn("Inventario insuficiente para orden {}", command.orderId());
+                            new InventoryRejectedEvent(command.orderId(), command.productId(), command.quantity(), "Insufficient stock"));
                 }
             }, () -> {
                 streamBridge.send("inventoryRejectedEvent-out-0",
-                        new InventoryRejectedEvent(command.orderId(), command.productId(), command.quantity()));
-                log.warn("Producto no encontrado: {}", command.productId());
+                        new InventoryRejectedEvent(command.orderId(), command.productId(), command.quantity(), "Producto no"));
+
             });
         };
     }

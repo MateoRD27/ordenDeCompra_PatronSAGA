@@ -1,0 +1,55 @@
+spring:
+  application:
+    name: order-service
+
+  rabbitmq:
+    host: localhost
+    port: 5672
+    username: admin
+    password: admin
+
+  datasource:
+    url: jdbc:h2:mem:orderdb
+    driver-class-name: org.h2.Driver
+    username: sa
+    password:
+
+  jpa:
+    hibernate:
+      ddl-auto: update
+    show-sql: true
+
+  cloud:
+    function:
+      definition: reserveInventory;releaseInventory;processPayment;orderCompleted;inventoryEvents;paymentEvents
+    stream:
+      bindings:
+        # OUTPUTS - Comandos que enviamos
+        reserveInventory-out-0:
+          destination: reserve-inventory-command
+
+        releaseInventory-out-0:
+          destination: release-inventory-command
+
+        processPayment-out-0:
+          destination: process-payment-command
+
+        orderCompleted-out-0:
+          destination: order-completed-event
+
+        # INPUTS - Eventos que recibimos
+        inventoryEvents-in-0:
+          destination: inventory-events
+          group: order-service-group
+
+        paymentEvents-in-0:
+          destination: payment-events
+          group: order-service-group
+
+server:
+  port: 8081
+
+logging:
+  level:
+    com.ecommerce.order: DEBUG
+    org.springframework.cloud.stream: DEBUG

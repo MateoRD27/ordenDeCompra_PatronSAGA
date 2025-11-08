@@ -14,18 +14,10 @@ spring:
     username: sa
     password:
 
-  h2:
-    console:
-      enabled: true
-      path: /h2-console
-
   jpa:
     hibernate:
       ddl-auto: update
     show-sql: true
-    properties:
-      hibernate:
-        format_sql: true
 
   cloud:
     function:
@@ -34,30 +26,15 @@ spring:
       bindings:
         # INPUT - Comando que recibimos
         processPaymentConsumer-in-0:
-          destination: payment.commands
+          destination: process-payment-command
           group: payment-service-group
 
         # OUTPUTS - Eventos que enviamos
         paymentCompleted-out-0:
-          destination: payment.events
+          destination: payment-events
 
         paymentFailed-out-0:
-          destination: payment.events
-
-      rabbit:
-        bindings:
-          paymentCompleted-out-0:
-            producer:
-              routing-key-expression: '''payment.completed'''
-
-          paymentFailed-out-0:
-            producer:
-              routing-key-expression: '''payment.failed'''
+          destination: payment-events
 
 server:
   port: 8083
-
-logging:
-  level:
-    com.ecommerce.payment_service: DEBUG
-    org.springframework.amqp: DEBUG
